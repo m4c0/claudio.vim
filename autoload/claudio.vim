@@ -11,7 +11,7 @@ enddef
 
 def Append(buf: number, msg: string)
   appendbufline(buf, getbufinfo(buf)[0].linecount - 1, msg)
-  setlocal nomodified
+  setbufvar(buf, '&modified', 0)
 enddef
 
 def TextEntered(text: string)
