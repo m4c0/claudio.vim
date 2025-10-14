@@ -10,20 +10,15 @@ def NextCommand(): string
 enddef
 
 def GotOutput(ch: channel, msg: string)
-  setlocal modifiable
-  append('$', msg)
-  setlocal nomodifiable
+  append(line('$') - 1, msg)
+  setlocal nomodified
 enddef
 def JobExit(job: job, status: number)
-  setlocal modifiable
-  append(line('$'), ['', '']) # Give some space after Claude's answer
+  append(line('$') - 1, ['']) # Give some space after Claude's answer
   setlocal nomodified
 enddef
 
 def TextEntered(text: string)
-  stopinsert
-  setlocal nomodified
-  setlocal nomodifiable
   b:claudio_job = job_start(NextCommand(), {
     out_cb: GotOutput,
     err_cb: GotOutput,
