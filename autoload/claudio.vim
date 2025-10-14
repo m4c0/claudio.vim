@@ -9,20 +9,16 @@ def NextCommand(): string
   endif
 enddef
 
-def GotOutput(ch: channel, msg: string)
-  append(line('$') - 1, msg)
-  setlocal nomodified
-enddef
-def JobExit(job: job, status: number)
-  append(line('$') - 1, ['']) # Give some space after Claude's answer
+def Append(buf: number, msg: string)
+  appendbufline(buf, getbufinfo(buf)[0].linecount - 1, msg)
   setlocal nomodified
 enddef
 
 def TextEntered(text: string)
+  const cur_buf = bufnr()
   b:claudio_job = job_start(NextCommand(), {
-    out_cb: GotOutput,
-    err_cb: GotOutput,
-    exit_cb: JobExit,
+    callback: (ch, msg) => Append(cur_buf, msg),
+    exit_cb: (j, st) => Append(cur_buf, ''), # Give some space after Claude's answer
   })
   ch_sendraw(b:claudio_job, text .. "\n")
   ch_close_in(b:claudio_job)
