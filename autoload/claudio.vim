@@ -45,11 +45,10 @@ def TextEntered(text: string)
 enddef
 
 export def New()
+  setlocal filetype=claudio
   setlocal buftype=prompt
   setlocal bufhidden=hide
   setlocal noswapfile
-  # TODO: syntax=claudio??
-  # setlocal syntax=java
 
   prompt_setcallback(bufnr(), TextEntered)
   prompt_setprompt(bufnr(), 'claudio> ')
