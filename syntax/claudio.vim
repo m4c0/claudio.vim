@@ -2,7 +2,7 @@ if exists("b:current_syntax")
   finish
 endif
 
-syn region claudioFold start='.' end='^result> $' transparent fold contains=claudioAssistant,claudioSystem,claudioUser
+syn region claudioFold start='.' end='^result>' transparent fold contains=claudioAssistant,claudioSystem,claudioUser
 
 syn match claudioPrompt '^claudio> ' nextgroup=claudioFold
 

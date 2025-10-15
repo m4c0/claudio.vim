@@ -20,7 +20,7 @@ def Append(buf: number, msg: string)
   if (json.type == 'system')
     appendbufline(buf, line, 'system> ' .. json.subtype)
   elseif (json.type == 'result')
-    appendbufline(buf, line, [''] + split(json.result, '\n') + [''])
+    appendbufline(buf, line, ['result>'] + split(json.result, '\n') + [''])
   else
     for cont in json.message.content
       if (cont.type == 'text')
