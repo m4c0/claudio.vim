@@ -10,11 +10,27 @@ def NextSessionParameter(): string
 enddef
 
 def NextCommand(): string
-  return 'claude --permission-mode plan -p ' .. NextSessionParameter()
+  return 'claude --output-format stream-json --verbose --permission-mode plan -p ' .. NextSessionParameter()
 enddef
 
 def Append(buf: number, msg: string)
-  appendbufline(buf, getbufinfo(buf)[0].linecount - 1, msg)
+  const line = getbufinfo(buf)[0].linecount - 1
+
+  const json = json_decode(msg)
+  if (json.type == 'system')
+    appendbufline(buf, line, 'system> ' .. json.subtype)
+  elseif (json.type == 'result')
+    appendbufline(buf, line, split(json.result, '\n'))
+  else
+    for cont in json.message.content
+      if (cont.type == 'text')
+        appendbufline(buf, line, json.type .. '> ' .. cont.text)
+      else
+        appendbufline(buf, line, json.type .. '> ' .. cont.type)
+      endif
+    endfor
+  endif
+
   setbufvar(buf, '&modified', 0)
 enddef
 
