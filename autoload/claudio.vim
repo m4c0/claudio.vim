@@ -1,12 +1,16 @@
 vim9script
 
-def NextCommand(): string
+def NextSessionParameter(): string
   if (has_key(b:, 'claudio_uuid'))
-    return 'claude --permission-mode plan -p -r ' .. b:claudio_uuid
+    return '-r ' .. b:claudio_uuid
   else
     b:claudio_uuid = expand('%:t:r')
-    return 'claude --permission-mode plan -p --session-id ' .. b:claudio_uuid
+    return '--session-id ' .. b:claudio_uuid
   endif
+enddef
+
+def NextCommand(): string
+  return 'claude --permission-mode plan -p ' .. NextSessionParameter()
 enddef
 
 def Append(buf: number, msg: string)
