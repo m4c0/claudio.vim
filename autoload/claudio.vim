@@ -20,7 +20,7 @@ def Append(buf: number, msg: string)
   if (json.type == 'system')
     appendbufline(buf, line, 'system> ' .. json.subtype)
   elseif (json.type == 'result')
-    appendbufline(buf, line, split(json.result, '\n'))
+    appendbufline(buf, line, [''] + split(json.result, '\n') + [''])
   else
     for cont in json.message.content
       if (cont.type == 'text')
@@ -38,7 +38,6 @@ def TextEntered(text: string)
   const cur_buf = bufnr()
   b:claudio_job = job_start(NextCommand(), {
     callback: (ch, msg) => Append(cur_buf, msg),
-    exit_cb: (j, st) => Append(cur_buf, ''), # Give some space after Claude's answer
   })
   ch_sendraw(b:claudio_job, text .. "\n")
   ch_close_in(b:claudio_job)
